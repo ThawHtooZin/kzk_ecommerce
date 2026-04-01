@@ -312,20 +312,77 @@ function bindCheckoutPage() {
   render();
 }
 
+function checkoutErrorMessage(data) {
+  if (!data || typeof data !== 'object') return t('order.place_failed');
+  if (typeof data.message === 'string' && data.message) return data.message;
+  const errs = data.errors;
+  if (errs && typeof errs === 'object') {
+    const first = Object.values(errs).flat()[0];
+    if (typeof first === 'string') return first;
+  }
+  return t('order.place_failed');
+}
+
 function bindPlaceOrder() {
   const btn = document.querySelector('[data-place-order]');
   if (!btn) return;
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', async () => {
     const { items } = loadCart();
     if (items.length === 0) {
       showStoreToast(t('cart.alert_empty'), { variant: 'error' });
       return;
     }
-    showStoreToast(t('order.demo_thanks'), { variant: 'success' });
-    clearCart();
-    window.setTimeout(() => {
-      window.location.href = '/products';
-    }, 1600);
+
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!token) {
+      showStoreToast(t('order.place_failed'), { variant: 'error' });
+      return;
+    }
+
+    const phone = document.querySelector('[data-checkout-phone]')?.value?.trim() ?? '';
+    const address = document.querySelector('[data-checkout-address]')?.value?.trim() ?? '';
+
+    const payload = {
+      phone: phone || null,
+      address: address || null,
+      items: items.map((it) => ({
+        product_id: Number(it.productId),
+        qty: it.qty,
+        size: it.size ? String(it.size) : '',
+      })),
+    };
+
+    btn.disabled = true;
+    try {
+      const res = await fetch('/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-CSRF-TOKEN': token,
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        showStoreToast(checkoutErrorMessage(data), { variant: 'error' });
+        return;
+      }
+
+      clearCart();
+      showStoreToast(t('order.placed_ok'), { variant: 'success' });
+      const dest = typeof data.redirect === 'string' ? data.redirect : '/orders';
+      window.setTimeout(() => {
+        window.location.href = dest;
+      }, 900);
+    } catch {
+      showStoreToast(t('order.place_failed'), { variant: 'error' });
+    } finally {
+      btn.disabled = false;
+    }
   });
 }
 

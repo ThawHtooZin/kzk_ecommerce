@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Support\PublicImageStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
     public function index(): View
     {
-        $products = Product::query()->with('category')->orderBy('sort_order')->orderByDesc('id')->get();
+        $products = Product::query()->with(['category', 'images'])->orderBy('sort_order')->orderByDesc('id')->get();
 
         return view('admin.products.index', compact('products'));
     }
@@ -40,6 +42,8 @@ class ProductController extends Controller
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
+            'gallery_images' => ['nullable', 'array', 'max:20'],
+            'gallery_images.*' => ['image', 'max:5120'],
         ]);
 
         $slug = $this->resolveProductSlug($validated['slug'] ?? null, $validated['name']);
@@ -49,7 +53,7 @@ class ProductController extends Controller
             $path = PublicImageStorage::store($request->file('image'), 'products');
         }
 
-        Product::query()->create([
+        $product = Product::query()->create([
             'category_id' => $validated['category_id'] ?? null,
             'name' => $validated['name'],
             'slug' => $slug,
@@ -62,12 +66,16 @@ class ProductController extends Controller
             'sort_order' => $validated['sort_order'] ?? 0,
         ]);
 
+        $this->appendGalleryUploads($product, $request);
+        $this->ensurePrimaryImage($product->fresh(['images']));
+
         return redirect()->route('admin.products.index')->with('status', 'Product created.');
     }
 
     public function edit(Product $product): View
     {
         $categories = Category::query()->orderBy('sort_order')->orderBy('name')->get();
+        $product->load(['images' => fn ($q) => $q->orderBy('sort_order')->orderBy('id')]);
 
         return view('admin.products.edit', compact('product', 'categories'));
     }
@@ -86,6 +94,17 @@ class ProductController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
             'remove_image' => ['nullable', 'boolean'],
+            'gallery_images' => ['nullable', 'array', 'max:20'],
+            'gallery_images.*' => ['image', 'max:5120'],
+            'remove_gallery_ids' => ['nullable', 'array'],
+            'remove_gallery_ids.*' => ['integer', 'exists:product_images,id'],
+            'gallery_position' => ['nullable', 'array'],
+            'gallery_position.*' => ['integer', 'min:1', 'max:999'],
+            'primary_image_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('product_images', 'id')->where('product_id', $product->id),
+            ],
         ]);
 
         $slug = $this->resolveProductSlug($validated['slug'] ?? null, $validated['name'], $product->id);
@@ -100,6 +119,18 @@ class ProductController extends Controller
             $product->image_path = PublicImageStorage::store($request->file('image'), 'products');
         }
 
+        foreach ($request->input('remove_gallery_ids', []) as $gid) {
+            $img = ProductImage::query()
+                ->where('product_id', $product->id)
+                ->whereKey((int) $gid)
+                ->first();
+            if ($img) {
+                $img->delete();
+            }
+        }
+
+        $this->appendGalleryUploads($product, $request);
+
         $product->fill([
             'category_id' => $validated['category_id'] ?? null,
             'name' => $validated['name'],
@@ -113,6 +144,8 @@ class ProductController extends Controller
         ]);
         $product->save();
 
+        $this->syncGalleryMeta($product, $request);
+
         return redirect()->route('admin.products.index')->with('status', 'Product updated.');
     }
 
@@ -123,10 +156,87 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        foreach ($product->images as $img) {
+            $img->delete();
+        }
         PublicImageStorage::delete($product->image_path);
         $product->delete();
 
         return redirect()->route('admin.products.index')->with('status', 'Product deleted.');
+    }
+
+    private function appendGalleryUploads(Product $product, Request $request): void
+    {
+        $files = $request->file('gallery_images', []);
+        if ($files === []) {
+            return;
+        }
+
+        $next = (int) $product->images()->max('sort_order');
+        foreach ($files as $file) {
+            if (! $file || ! $file->isValid()) {
+                continue;
+            }
+            $next++;
+            $product->images()->create([
+                'image_path' => PublicImageStorage::store($file, 'products'),
+                'sort_order' => $next,
+                'is_primary' => false,
+            ]);
+        }
+    }
+
+    private function syncGalleryMeta(Product $product, Request $request): void
+    {
+        $product->load(['images' => fn ($q) => $q->orderBy('sort_order')->orderBy('id')]);
+
+        if ($product->images->isEmpty()) {
+            return;
+        }
+
+        foreach ($request->input('gallery_position', []) as $imageId => $pos) {
+            $img = ProductImage::query()
+                ->where('product_id', $product->id)
+                ->whereKey((int) $imageId)
+                ->first();
+            if ($img) {
+                $img->update(['sort_order' => max(1, (int) $pos)]);
+            }
+        }
+
+        $product->images()->update(['is_primary' => false]);
+
+        $primaryId = $request->input('primary_image_id');
+        if ($primaryId) {
+            $p = ProductImage::query()
+                ->where('product_id', $product->id)
+                ->whereKey((int) $primaryId)
+                ->first();
+            if ($p) {
+                $p->update(['is_primary' => true]);
+            }
+        }
+
+        $this->ensurePrimaryImage($product->fresh(['images']));
+    }
+
+    private function ensurePrimaryImage(Product $product): void
+    {
+        $product->load(['images' => fn ($q) => $q->orderBy('sort_order')->orderBy('id')]);
+
+        if ($product->images->isEmpty()) {
+            return;
+        }
+
+        if ($product->images->contains(fn (ProductImage $i) => $i->is_primary)) {
+            return;
+        }
+
+        $first = $product->images->first();
+        if ($first) {
+            $product->images()->update(['is_primary' => false]);
+            $first->update(['is_primary' => true]);
+        }
     }
 
     private function resolveProductSlug(?string $slugInput, string $name, ?int $exceptId = null): string

@@ -17,7 +17,7 @@ class ProductController extends Controller
 
         $products = Product::query()
             ->active()
-            ->with('category')
+            ->with(['category', 'images'])
             ->when($q !== '', fn ($qb) => $qb->where('name', 'like', '%'.$q.'%'))
             ->when($categoryId !== null && $categoryId !== '' && is_numeric($categoryId), fn ($qb) => $qb->where('category_id', (int) $categoryId))
             ->orderBy('sort_order')
@@ -33,7 +33,7 @@ class ProductController extends Controller
     {
         abort_unless($product->is_active, 404);
 
-        $product->load('category');
+        $product->load(['category', 'images']);
 
         return view('store.products.show', compact('product'));
     }

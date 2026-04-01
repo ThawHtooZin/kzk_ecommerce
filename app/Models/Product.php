@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use App\Support\PublicImageStorage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -36,6 +38,36 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /** @return HasMany<ProductImage> */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Gallery order for product detail (swipe order): by sort_order ascending.
+     *
+     * @return list<string>
+     */
+    public function galleryUrls(): array
+    {
+        $this->loadMissing('images');
+
+        $fromGallery = $this->images
+            ->sortBy('sort_order')
+            ->values()
+            ->map(fn (ProductImage $img) => $img->url())
+            ->filter()
+            ->all();
+        if ($fromGallery !== []) {
+            return $fromGallery;
+        }
+
+        $legacy = PublicImageStorage::publicUrl($this->image_path);
+
+        return $legacy ? [$legacy] : [];
+    }
+
     /**
      * @param  Builder<Product>  $query
      * @return Builder<Product>
@@ -45,21 +77,22 @@ class Product extends Model
         return $query->where('is_active', true);
     }
 
+    /** Main image for listings, cart, grids — the image marked primary, else first by sort order. */
     public function imageUrl(): ?string
     {
-        if (! $this->image_path) {
-            return null;
+        $this->loadMissing('images');
+
+        $primary = $this->images->firstWhere('is_primary', true);
+        if ($primary) {
+            return $primary->url();
         }
 
-        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
-            return $this->image_path;
+        $first = $this->images->sortBy('sort_order')->first();
+        if ($first) {
+            return $first->url();
         }
 
-        if (str_starts_with($this->image_path, 'uploads/')) {
-            return '/'.$this->image_path;
-        }
-
-        return '/storage/'.$this->image_path;
+        return PublicImageStorage::publicUrl($this->image_path);
     }
 
     /** @return list<string> */

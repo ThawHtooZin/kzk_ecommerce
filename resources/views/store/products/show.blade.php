@@ -1,6 +1,8 @@
 @php($title = $product->name)
 @php($breadcrumbs = 'Home / Products / '.$product->name)
 @php($sizes = $product->sizesForSelect())
+@php($gallery = $product->galleryUrls())
+@php($mainImage = $product->imageUrl())
 @extends('layouts.store')
 
 @section('content')
@@ -10,21 +12,41 @@
     data-product-id="{{ $product->id }}"
     data-product-name="{{ $product->name }}"
     data-product-price-mmk="{{ $product->price_mmk }}"
-    @if($product->imageUrl()) data-product-image="{{ $product->imageUrl() }}" @endif
+    @if($mainImage) data-product-image="{{ $mainImage }}" @endif
   >
     <section class="rounded-2xl border border-zinc-200 bg-white p-3">
-      @if($product->imageUrl())
-        <div class="aspect-4/3 w-full overflow-hidden rounded-2xl bg-zinc-100">
-          <img src="{{ $product->imageUrl() }}" alt="" class="h-full w-full object-contain" />
+      @if(count($gallery) > 0)
+        <div class="relative aspect-4/3 w-full overflow-hidden rounded-2xl bg-zinc-100">
+          <div
+            id="product-gallery-scroll"
+            class="product-gallery-scroll flex h-full w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden"
+            role="region"
+            aria-label="Product photos"
+          >
+            @foreach ($gallery as $url)
+              <div class="flex h-full w-full min-w-full shrink-0 snap-center snap-always items-center justify-center p-2">
+                <img src="{{ $url }}" alt="" class="max-h-full max-w-full object-contain" />
+              </div>
+            @endforeach
+          </div>
         </div>
+        @if(count($gallery) > 1)
+          <div class="mt-3 flex justify-center gap-1.5" id="product-gallery-dots" aria-hidden="true">
+            @foreach ($gallery as $i => $url)
+              <button
+                type="button"
+                class="product-gallery-dot h-2 w-2 rounded-full bg-zinc-300 transition-colors data-[active=true]:bg-zinc-900"
+                data-gallery-index="{{ $i }}"
+                data-active="{{ $i === 0 ? 'true' : 'false' }}"
+                aria-label="Photo {{ $i + 1 }}"
+              ></button>
+            @endforeach
+          </div>
+          <p class="mt-2 text-center text-[11px] text-zinc-500" data-i18n="product.swipe_hint">Swipe for more photos</p>
+        @endif
       @else
         <div class="aspect-4/3 w-full rounded-2xl bg-zinc-100"></div>
       @endif
-      <div class="mt-3 flex items-center justify-center gap-2">
-        <span class="h-2 w-2 rounded-full bg-zinc-950"></span>
-        <span class="h-2 w-2 rounded-full bg-zinc-300"></span>
-        <span class="h-2 w-2 rounded-full bg-zinc-300"></span>
-      </div>
     </section>
 
     <section class="rounded-2xl border border-zinc-200 bg-white p-4">
@@ -86,3 +108,33 @@
     </section>
   </div>
 @endsection
+
+@if(count($gallery) > 1)
+  @push('scripts')
+    <script>
+      (function () {
+        var sc = document.getElementById('product-gallery-scroll');
+        var dots = document.querySelectorAll('.product-gallery-dot');
+        if (!sc || !dots.length) return;
+
+        function syncDots() {
+          var w = sc.clientWidth;
+          if (!w) return;
+          var idx = Math.round(sc.scrollLeft / w);
+          dots.forEach(function (d, i) {
+            d.setAttribute('data-active', i === idx ? 'true' : 'false');
+          });
+        }
+
+        sc.addEventListener('scroll', syncDots, { passive: true });
+        dots.forEach(function (dot) {
+          dot.addEventListener('click', function () {
+            var i = parseInt(dot.getAttribute('data-gallery-index'), 10);
+            var w = sc.clientWidth;
+            if (w) sc.scrollTo({ left: i * w, behavior: 'smooth' });
+          });
+        });
+      })();
+    </script>
+  @endpush
+@endif

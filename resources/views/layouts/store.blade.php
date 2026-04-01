@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ isset($title) ? $title.' · ' : '' }}{{ config('app.name', 'Ecommerce') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -37,6 +38,7 @@
             @guest
               <a href="{{ url('/login') }}" class="inline-flex h-10 items-center rounded-xl px-3 text-sm font-medium text-white/90 hover:bg-white/10" data-i18n="nav.sign_in">Sign in</a>
             @else
+              <a href="{{ route('orders.index') }}" class="hidden sm:inline-flex h-10 items-center rounded-xl px-3 text-sm font-medium text-white/90 hover:bg-white/10" data-i18n="nav.orders">My orders</a>
               <span class="hidden max-w-[140px] truncate text-sm text-white/80 sm:inline" title="{{ Auth::user()->name }}">{{ Auth::user()->name }}</span>
               <form method="post" action="{{ url('/logout') }}" class="inline">
                 @csrf
@@ -72,6 +74,9 @@
           </div>
 
           <nav class="mt-3 hidden lg:flex items-center gap-2 text-sm">
+            @auth
+              <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->routeIs('orders.*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ route('orders.index') }}" data-i18n="nav.orders">My orders</a>
+            @endauth
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('/') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/') }}" data-i18n="nav.home">Home</a>
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('categories*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/categories') }}" data-i18n="nav.categories">Categories</a>
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('products*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/products') }}" data-i18n="nav.products">Products</a>
@@ -87,6 +92,9 @@
 
         <div class="lg:hidden" data-mobile-menu hidden>
           <div class="border-t border-white/10 px-4 py-3 grid grid-cols-2 gap-2 text-sm">
+            @auth
+              <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->routeIs('orders.*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ route('orders.index') }}" data-i18n="nav.orders">My orders</a>
+            @endauth
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('/') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/') }}" data-i18n="nav.home">Home</a>
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('categories*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/categories') }}" data-i18n="nav.categories">Categories</a>
             <a class="rounded-xl px-3 py-2 hover:bg-white/10 {{ request()->is('products*') ? 'bg-white/10 font-semibold' : '' }}" href="{{ url('/products') }}" data-i18n="nav.products">Products</a>

@@ -21,6 +21,7 @@ class CategoryController extends Controller
         $products = Product::query()
             ->active()
             ->where('category_id', $category->id)
+            ->with('images')
             ->orderBy('sort_order')
             ->orderByDesc('id')
             ->get();

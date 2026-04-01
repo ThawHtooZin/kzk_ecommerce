@@ -21,8 +21,8 @@
     </div>
     <div class="rounded-2xl border border-zinc-200 bg-white p-4">
       <div class="text-xs text-zinc-500">Orders</div>
-      <div class="mt-2 text-lg font-semibold tracking-tight">—</div>
-      <div class="mt-1 text-xs text-zinc-500">Wire when you add order persistence</div>
+      <div class="mt-2 text-lg font-semibold tracking-tight">{{ $orderCount }}</div>
+      <div class="mt-1 text-xs text-zinc-500">{{ $pendingOrderCount }} pending</div>
     </div>
   </div>
 
@@ -39,6 +39,8 @@
         <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold hover:bg-zinc-50" href="{{ route('admin.categories.create') }}">Add category</a>
         <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold hover:bg-zinc-50" href="{{ url('/admin/products') }}">All products</a>
         <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold hover:bg-zinc-50" href="{{ url('/admin/categories') }}">All categories</a>
+        <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold hover:bg-zinc-50" href="{{ route('admin.orders.index') }}">Orders</a>
+        <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold hover:bg-zinc-50" href="{{ route('admin.customers.index') }}">Customers</a>
       </div>
     </section>
 

@@ -26,15 +26,15 @@
             </div>
             <div>
               <label class="text-sm font-semibold" data-i18n="checkout.phone">Phone</label>
-              <input class="mt-2 h-11 w-full rounded-xl border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-zinc-400" data-i18n-placeholder="checkout.phone_ph" placeholder="Add at checkout step 2" />
+              <input data-checkout-phone class="mt-2 h-11 w-full rounded-xl border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-zinc-400" data-i18n-placeholder="checkout.phone_ph" placeholder="Add at checkout step 2" />
             </div>
           </div>
           <div>
             <label class="text-sm font-semibold" data-i18n="checkout.address">Delivery address</label>
-            <input class="mt-2 h-11 w-full rounded-xl border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-zinc-400" data-i18n-placeholder="checkout.address_ph" placeholder="Street, area…" />
+            <input data-checkout-address class="mt-2 h-11 w-full rounded-xl border border-zinc-200 bg-white px-3 text-sm outline-none focus:border-zinc-400" data-i18n-placeholder="checkout.address_ph" placeholder="Street, area…" />
           </div>
           <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700" data-i18n="checkout.payment_note">
-            Payment integration can be added later. Place order below runs the demo and clears your cart.
+            Your order is saved to your account. You can track status under My orders. Payment integration can be added later.
           </div>
         </div>
       </section>

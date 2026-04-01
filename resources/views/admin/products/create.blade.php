@@ -63,8 +63,14 @@
         <textarea id="description" name="description" rows="4" class="mt-2 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400">{{ old('description') }}</textarea>
       </div>
       <div>
-        <label class="text-sm font-semibold" for="image">Image</label>
+        <label class="text-sm font-semibold" for="image">Cover image</label>
+        <p class="mt-1 text-xs text-zinc-500">Used in grids and as fallback. Optional if you add a gallery.</p>
         <input id="image" name="image" type="file" accept="image/*" class="mt-2 block w-full text-sm text-zinc-600 file:mr-3 file:rounded-xl file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
+      </div>
+      <div>
+        <label class="text-sm font-semibold" for="gallery_images">Gallery images</label>
+        <p class="mt-1 text-xs text-zinc-500">Select multiple files — customers swipe through them on the product page. After save, open Edit to set <strong>position</strong> (1,2,3…) and which is the <strong>main</strong> image for listings.</p>
+        <input id="gallery_images" name="gallery_images[]" type="file" accept="image/*" multiple class="mt-2 block w-full text-sm text-zinc-600 file:mr-3 file:rounded-xl file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white" />
       </div>
     </section>
     <aside class="rounded-2xl border border-zinc-200 bg-zinc-50 p-4 h-fit space-y-3">

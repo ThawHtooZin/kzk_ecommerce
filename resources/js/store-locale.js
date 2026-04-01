@@ -17,6 +17,7 @@ const STRINGS = {
     'nav.products': 'Products',
     'nav.contact': 'Contact',
     'nav.admin': 'Admin',
+    'nav.orders': 'My orders',
     'nav.lang_en': 'EN',
     'nav.lang_my': 'မြန်မာ',
 
@@ -90,6 +91,7 @@ const STRINGS = {
     'product.select_size_alert': 'Please select a size.',
     'product.category': 'Category:',
     'product.note': 'Cart is saved on this device. Sign in to checkout.',
+    'product.swipe_hint': 'Swipe for more photos',
 
     'cart.title': 'My cart',
     'cart.sub': 'Saved on this device (browser storage).',
@@ -113,7 +115,7 @@ const STRINGS = {
     'checkout.title': 'Checkout',
     'checkout.signed_in': 'Signed in as',
     'checkout.payment_note':
-      'Payment integration can be added later. Place order below runs the demo and clears your cart.',
+      'Your order is saved to your account. You can track status under My orders. Payment integration can be added later.',
     'checkout.back_cart': 'Back to cart',
     'checkout.full_name': 'Full name',
     'checkout.phone': 'Phone',
@@ -127,6 +129,21 @@ const STRINGS = {
     'checkout.place': 'Place order',
     'order.demo_thanks':
       'Thank you! Your order request was recorded (demo). You can connect this button to your backend next.',
+    'order.placed_ok': 'Order placed — taking you to your order…',
+    'order.place_failed': 'Could not place order. Please try again.',
+
+    'orders.title': 'My orders',
+    'orders.sub': 'Track status and details for every order.',
+    'orders.shop': 'Shop',
+    'orders.empty': 'No orders yet. Browse products and place your first order at checkout.',
+    'orders.detail_title': 'Order',
+    'orders.back_list': 'All orders',
+    'orders.items': 'Items',
+    'orders.size': 'Size',
+    'orders.subtotal': 'Subtotal',
+    'orders.delivery': 'Delivery',
+    'orders.phone': 'Phone',
+    'orders.no_address': 'No address on file for this order.',
 
     'contact.title': 'Contact',
     'contact.sub': 'We serve customers in Myanmar. Prices are in MMK.',
@@ -174,6 +191,7 @@ const STRINGS = {
     'nav.products': 'ကုန်ပစ္စည်းများ',
     'nav.contact': 'ဆက်သွယ်ရန်',
     'nav.admin': 'စီမံခန့်ခွဲမှု',
+    'nav.orders': 'ကျွန်ုပ်၏ မှာယူမှုများ',
     'nav.lang_en': 'EN',
     'nav.lang_my': 'မြန်မာ',
 
@@ -247,6 +265,7 @@ const STRINGS = {
     'product.select_size_alert': 'အရွယ်အစား ရွေးချယ်ပါ။',
     'product.category': 'အမျိုးအစား:',
     'product.note': 'ခြင်းတောင်း ဤစက်တွင် သိမ်းပါသည်။ ငွေပေးချေရန် ဝင်ရောက်ပါ။',
+    'product.swipe_hint': 'ပိုပုံများအတွက် ဘေးသို့ ပွတ်ဆွဲပါ',
 
     'cart.title': 'ကျွန်ုပ်၏ ခြင်းတောင်း',
     'cart.sub': 'ဤစက်တွင် သိမ်းဆည်းထားသည်။',
@@ -269,7 +288,8 @@ const STRINGS = {
 
     'checkout.title': 'ငွေပေးချေရန်',
     'checkout.signed_in': 'ဝင်ရောက်ထားသူ',
-    'checkout.payment_note': 'ငွေပေးချေမှုကို နောက်မှ ချိတ်ဆက်နိုင်ပါသည်။ မှာယူမည် နှိပ်ပါက စမ်းသပ်မှုအတိုင်း ခြင်းတောင်း ရှင်းပါမည်။',
+    'checkout.payment_note':
+      'မှာယူမှုကို အကောင့်တွင် သိမ်းပါသည်။ အခြေအနေကို ကျွန်ုပ်၏ မှာယူမှုများ တွင် ကြည့်နိုင်ပါသည်။ ငွေပေးချေမှုကို နောက်မှ ချိတ်ဆက်နိုင်ပါသည်။',
     'checkout.back_cart': 'ခြင်းတောင်းသို့ ပြန်သွားရန်',
     'checkout.full_name': 'အမည်အပြည့်အစုံ',
     'checkout.phone': 'ဖုန်း',
@@ -282,6 +302,21 @@ const STRINGS = {
     'checkout.subtotal': 'စုစုပေါင်း',
     'checkout.place': 'မှာယူမည်',
     'order.demo_thanks': 'ကျေးဇူးတင်ပါသည်။ (စမ်းသပ်မှု) မှာယူမှုကို မှတ်တမ်းတင်ပြီးပါပြီ။',
+    'order.placed_ok': 'မှာယူမှု အောင်မြင်ပါသည် — မှာယူမှုစာမျက်နှာသို့…',
+    'order.place_failed': 'မှာယူ၍ မရပါ။ ထပ်ကြိုးစားပါ။',
+
+    'orders.title': 'ကျွန်ုပ်၏ မှာယူမှုများ',
+    'orders.sub': 'မှာယူမှုတိုင်းအတွက် အခြေအနေနှင့် အသေးစိတ်။',
+    'orders.shop': 'ဝယ်ယူရန်',
+    'orders.empty': 'မှာယူမှု မရှိသေးပါ။ ကုန်ပစ္စည်းကြည့်ပြီး ငွေပေးချေရန်တွင် မှာယူပါ။',
+    'orders.detail_title': 'မှာယူမှု',
+    'orders.back_list': 'မှာယူမှုအားလုံး',
+    'orders.items': 'ပစ္စည်းများ',
+    'orders.size': 'အရွယ်အစား',
+    'orders.subtotal': 'စုစုပေါင်း',
+    'orders.delivery': 'ပို့ဆောင်မှု',
+    'orders.phone': 'ဖုန်း',
+    'orders.no_address': 'ဤမှာယူမှုတွင် လိပ်စာ မရှိပါ။',
 
     'contact.title': 'ဆက်သွယ်ရန်',
     'contact.sub': 'မြန်မာနိုင်ငံ ဖောက်သည်များ။ ဈေးနှုန်း MMK။',

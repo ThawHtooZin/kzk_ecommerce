@@ -23,6 +23,24 @@ final class PublicImageStorage
         return 'uploads/'.$folder.'/'.$name;
     }
 
+    /** Resolve a stored path to a public URL (uploads/, storage/, or absolute http(s)). */
+    public static function publicUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'uploads/')) {
+            return '/'.$path;
+        }
+
+        return '/storage/'.$path;
+    }
+
     /** Remove a file only if it lives under public/uploads/ (avoids arbitrary path deletes). */
     public static function delete(?string $relativePath): void
     {
