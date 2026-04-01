@@ -17,8 +17,15 @@ onReady(() => {
   const storeTrigger = document.querySelector('[data-mobile-menu-trigger]');
   const storeMenu = document.querySelector('[data-mobile-menu]');
   if (storeTrigger && storeMenu) {
+    const setOpen = (open) => {
+      storeMenu.hidden = !open;
+      storeTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
     storeTrigger.addEventListener('click', () => {
-      storeMenu.hidden = !storeMenu.hidden;
+      setOpen(storeMenu.hidden);
+    });
+    storeMenu.querySelectorAll('a[href]').forEach((a) => {
+      a.addEventListener('click', () => setOpen(false));
     });
   }
 
