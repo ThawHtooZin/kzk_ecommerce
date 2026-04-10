@@ -1,4 +1,4 @@
-@php($phone = config('store.contact_phone'))
+@php($phone = '+95 9 123 456 789')
 @php($phoneTel = preg_replace('/\s+/', '', $phone))
 @php($title = 'Contact')
 @php($breadcrumbs = 'Home / Contact')
@@ -26,7 +26,7 @@
           <span class="font-semibold text-zinc-950" data-i18n="contact.mm">Myanmar</span>
         </div>
       </div>
-      <div class="mt-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700" data-i18n="contact.dev_note" data-i18n-html></div>
+      {{-- <div class="mt-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 text-sm text-zinc-700" data-i18n="contact.dev_note" data-i18n-html></div> --}}
     </section>
 
     <section class="rounded-2xl border border-zinc-200 bg-white p-4">
@@ -38,9 +38,9 @@
         <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-center text-sm font-semibold hover:bg-zinc-50" href="{{ url('/products') }}" data-i18n="contact.browse">
           Browse products
         </a>
-        <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-center text-sm font-semibold hover:bg-zinc-50" href="{{ url('/admin') }}" data-i18n="contact.admin">
+        {{-- <a class="rounded-xl border border-zinc-200 bg-white px-4 py-3 text-center text-sm font-semibold hover:bg-zinc-50" href="{{ url('/admin') }}" data-i18n="contact.admin">
           Go to admin
-        </a>
+        </a> --}}
       </div>
     </section>
   </div>

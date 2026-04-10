@@ -4,17 +4,18 @@
 @section('content')
   <div
     id="first-visit-locale-modal"
-    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm"
     hidden
     role="dialog"
     aria-modal="true"
     aria-labelledby="first-visit-locale-title"
   >
-    <div class="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl">
-      <h2 id="first-visit-locale-title" class="text-center text-lg font-semibold text-zinc-950" data-i18n="modal.pick_title">Choose language</h2>
+    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl shadow-black/40 ring-1 ring-white/10">
+      <h2 id="first-visit-locale-title" class="text-center text-lg font-semibold text-white" data-i18n="modal.pick_title">Choose language</h2>
+      <p class="mt-2 text-center text-xs text-white/60" data-i18n="modal.pick_hint">You can change this anytime from the top bar.</p>
       <div class="mt-6 flex flex-col gap-2 sm:flex-row">
-        <button type="button" data-locale-pick="en" class="flex-1 rounded-xl bg-zinc-950 px-4 py-3 text-sm font-semibold text-white hover:bg-zinc-900" data-i18n="modal.btn_en">English</button>
-        <button type="button" data-locale-pick="my" class="flex-1 rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm font-semibold text-zinc-950 hover:bg-zinc-50" data-i18n="modal.btn_my">မြန်မာ</button>
+        <button type="button" data-locale-pick="en" class="flex-1 rounded-xl bg-amber-300 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-200" data-i18n="modal.btn_en">English</button>
+        <button type="button" data-locale-pick="my" class="flex-1 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10" data-i18n="modal.btn_my">မြန်မာ</button>
       </div>
     </div>
   </div>
@@ -49,7 +50,7 @@
         <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 col-span-2">
           <div class="text-xs text-white/70" data-i18n="home.card_contact">Contact</div>
           <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
-            <div class="text-lg font-semibold">{{ config('store.contact_phone') }}</div>
+            <div class="text-lg font-semibold">+95 9 123 456 789</div>
             <a class="rounded-xl bg-white/10 px-3 py-2 text-sm font-semibold hover:bg-white/15" href="{{ url('/contact') }}" data-i18n="home.contact_page">Contact page</a>
           </div>
         </div>

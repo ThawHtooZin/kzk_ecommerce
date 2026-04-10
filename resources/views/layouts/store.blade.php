@@ -147,11 +147,11 @@
         @yield('content')
       </main>
 
-      <footer class="border-t border-slate-200 px-4 py-6 bg-slate-50">
+      {{-- <footer class="border-t border-slate-200 px-4 py-6 bg-slate-50">
         <div class="grid gap-4 lg:grid-cols-3">
           <div class="text-sm">
             <div class="font-semibold" data-i18n="footer.contact">Contact</div>
-            <div class="mt-1 text-zinc-600"><span data-i18n="footer.phone_line">Call / Viber / WhatsApp:</span> <span class="font-medium">{{ config('store.contact_phone') }}</span></div>
+            <div class="mt-1 text-zinc-600"><span data-i18n="footer.phone_line">Call / Viber / WhatsApp:</span> <span class="font-medium">+95 9 123 456 789</span></div>
             <div class="text-zinc-600" data-i18n="footer.delivery_line">Delivery in Myanmar · All prices MMK</div>
           </div>
           <div class="text-sm">
@@ -169,7 +169,7 @@
             <div class="mt-1">© {{ date('Y') }}. <span data-i18n="footer.rights">All rights reserved.</span></div>
           </div>
         </div>
-      </footer>
+      </footer> --}}
     </div>
 
     @stack('scripts')

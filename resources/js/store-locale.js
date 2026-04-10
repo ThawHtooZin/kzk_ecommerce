@@ -28,6 +28,7 @@ const STRINGS = {
     'footer.rights': 'All rights reserved.',
 
     'modal.pick_title': 'Choose language',
+    'modal.pick_hint': 'You can change this anytime from the top bar.',
     'modal.btn_en': 'English',
     'modal.btn_my': 'မြန်မာ',
 
@@ -153,7 +154,7 @@ const STRINGS = {
     'contact.delivery_row': 'Delivery',
     'contact.mm': 'Myanmar',
     'contact.dev_note':
-      'Set your real number in <code class="rounded bg-zinc-200 px-1 text-xs">.env</code> as <code class="rounded bg-zinc-200 px-1 text-xs">STORE_CONTACT_PHONE</code> (see <code class="rounded bg-zinc-200 px-1 text-xs">config/store.php</code>).',
+      'Update the phone number in the Blade templates (contact page, home, and store layout footer) if it changes.',
     'contact.quick': 'Quick actions',
     'contact.call': 'Call now',
     'contact.browse': 'Browse products',
@@ -202,6 +203,7 @@ const STRINGS = {
     'footer.rights': 'မူပိုင်ခွင့်ရှိပါသည်။',
 
     'modal.pick_title': 'ဘာသာစကား ရွေးပါ',
+    'modal.pick_hint': 'အပေါ်ဘားမှ နောက်ပိုင်းတွင် ပြောင်းလဲနိုင်ပါသည်။',
     'modal.btn_en': 'English',
     'modal.btn_my': 'မြန်မာ',
 
@@ -326,7 +328,7 @@ const STRINGS = {
     'contact.delivery_row': 'ပို့ဆောင်မှု',
     'contact.mm': 'မြန်မာ',
     'contact.dev_note':
-      'ဖုန်းနံပါတ်ကို <code class="rounded bg-zinc-200 px-1 text-xs">.env</code> တွင် <code class="rounded bg-zinc-200 px-1 text-xs">STORE_CONTACT_PHONE</code> ဖြင့် သတ်မှတ်ပါ (<code class="rounded bg-zinc-200 px-1 text-xs">config/store.php</code> ကြည့်ပါ)။',
+      'ဖုန်းနံပါတ် ပြောင်းလဲလျှင် contact စာမျက်နှာ၊ ပင်မစာမျက်နှာ၊ store layout footer တို့ရှိ Blade တွင်ပြင်ဆင်ပါ။',
     'contact.quick': 'လုပ်ဆောင်ချက်များ',
     'contact.call': 'ခေါ်ဆိုရန်',
     'contact.browse': 'ကုန်ပစ္စည်းကြည့်ရန်',
